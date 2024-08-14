@@ -13,8 +13,10 @@ const HospitalForm = () => {
   };
 
   return (
-    <div style={{padding:"30px"}}>
-      <label htmlFor="hospitalDataType">Select Hospital Data Type:</label>
+    <div style={{ padding: "30px" }}>
+      <label style={{ margin: "5px" }} htmlFor="hospitalDataType">
+        Select Hospital Data Type:
+      </label>
       <select
         id="hospitalDataType"
         value={selectedType}

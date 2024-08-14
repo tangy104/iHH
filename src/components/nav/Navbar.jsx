@@ -12,6 +12,10 @@ const Navbar = () => {
     setShowNavbar(!showNavbar);
   };
 
+  const handleNavLinkClick = () => {
+    setShowNavbar(false);
+  };
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
@@ -42,7 +46,7 @@ const Navbar = () => {
           className={`${styles.navElements} ${showNavbar ? styles.active : ""}`}
         >
           <ul>
-            <li>
+            {/* <li>
               <NavLink
                 to="/"
                 className={({ isActive }) =>
@@ -51,13 +55,14 @@ const Navbar = () => {
               >
                 Home
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/form"
                 className={({ isActive }) =>
                   isActive ? styles.activeLink : ""
                 }
+                onClick={handleNavLinkClick}
               >
                 Form
               </NavLink>
@@ -68,6 +73,7 @@ const Navbar = () => {
                 className={({ isActive }) =>
                   isActive ? styles.activeLink : ""
                 }
+                onClick={handleNavLinkClick}
               >
                 Analytics
               </NavLink>

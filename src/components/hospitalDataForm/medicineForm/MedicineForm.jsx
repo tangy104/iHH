@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./MedicineForm.module.css";
 import axios from "axios";
 
 const MedicineForm = () => {
@@ -33,44 +34,50 @@ const MedicineForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <label className={styles.label}>
         User Id:
         <input
+          className={styles.input}
           type="text"
           name="userId"
           value={formData.userId}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Date:
         <input
+          className={styles.input}
           type="date"
           name="date"
           value={formData.date}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Doctor:
         <input
+          className={styles.input}
           type="text"
           name="doctor"
           value={formData.doctor}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Medicine prescribed:
         <input
+          className={styles.input}
           type="text"
           name="medicine"
           value={formData.medicine}
           onChange={handleChange}
         />
       </label>
-      <button type="submit">Submit</button>
+      <button className={styles.button} type="submit">
+        Submit
+      </button>
       {responseMessage && <p>{responseMessage}</p>}
     </form>
   );

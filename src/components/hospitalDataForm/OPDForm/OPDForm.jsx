@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./OPDForm.module.css";
 import axios from "axios";
 
 const OPDForm = () => {
@@ -34,53 +35,60 @@ const OPDForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <label className={styles.label}>
         User Id:
         <input
+          className={styles.input}
           type="text"
           name="userId"
           value={formData.userId}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Date:
         <input
+          className={styles.input}
           type="date"
           name="date"
           value={formData.date}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Doctor:
         <input
+          className={styles.input}
           type="text"
           name="doctor"
           value={formData.doctor}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Prescription:
         <input
+          className={styles.input}
           type="text"
           name="prescription"
           value={formData.prescription}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Status:
         <input
+          className={styles.input}
           type="text"
           name="status"
           value={formData.status}
           onChange={handleChange}
         />
       </label>
-      <button type="submit">Submit</button>
+      <button className={styles.button} type="submit">
+        Submit
+      </button>
       {responseMessage && <p>{responseMessage}</p>}
     </form>
   );

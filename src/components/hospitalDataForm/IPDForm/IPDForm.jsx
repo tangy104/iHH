@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./IPDForm.module.css";
 import axios from "axios";
 
 const IPDForm = () => {
@@ -36,71 +37,80 @@ const IPDForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <label className={styles.label}>
         User Id:
         <input
+          className={styles.input}
           type="text"
           name="userId"
           value={formData.userId}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Admit No:
         <input
+          className={styles.input}
           type="text"
           name="admitNo"
           value={formData.admitNo}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Admission Date:
         <input
+          className={styles.input}
           type="date"
           name="admissionDate"
           value={formData.admissionDate}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Discharge Date:
         <input
+          className={styles.input}
           type="date"
           name="dischargeDate"
           value={formData.dischargeDate}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Doctor:
         <input
+          className={styles.input}
           type="text"
           name="doctor"
           value={formData.doctor}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Prescription:
         <input
+          className={styles.input}
           type="text"
           name="prescription"
           value={formData.prescription}
           onChange={handleChange}
         />
       </label>
-      <label>
+      <label className={styles.label}>
         Status:
         <input
+          className={styles.input}
           type="text"
           name="status"
           value={formData.status}
           onChange={handleChange}
         />
       </label>
-      <button type="submit">Submit</button>
+      <button className={styles.button} type="submit">
+        Submit
+      </button>
       {responseMessage && <p>{responseMessage}</p>}
     </form>
   );
