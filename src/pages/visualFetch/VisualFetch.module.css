@@ -1,0 +1,39 @@
+.app {
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .buttons {
+    display:"flex";
+    flex-direction: "row";
+    margin: 20px;
+    /* background-color: red; */
+  }
+  
+  button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #ddd;
+  }
+  
+  .dataContainer {
+    display:flex;
+    justify-content: space-evenly;
+    /* align-items: center; */
+    margin-top: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin: 5px 0;
+  }
+  
