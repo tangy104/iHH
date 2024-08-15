@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import styles from "./Navbar.module.css";
 
 import logo from "../../assets/images/logo.png";
 import ham from "../../assets/images/ham.png";
 
 const Navbar = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  console.log("Current path:", currentPath);
   const [showNavbar, setShowNavbar] = useState(false);
 
   const handleShowNavbar = () => {
@@ -60,7 +64,7 @@ const Navbar = () => {
               <NavLink
                 to="/form"
                 className={({ isActive }) =>
-                  isActive ? styles.activeLink : ""
+                  isActive || currentPath === "/" ? styles.activeLink : ""
                 }
                 onClick={handleNavLinkClick}
               >

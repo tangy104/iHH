@@ -4,7 +4,7 @@ import axios from "axios";
 
 const OPDForm = () => {
   const [formData, setFormData] = useState({
-    userId: "",
+    userid: "",
     date: "",
     doctor: "",
     prescription: "",
@@ -12,6 +12,16 @@ const OPDForm = () => {
   });
 
   const [responseMessage, setResponseMessage] = useState("");
+
+  // Validation function to check if all fields are filled
+  const validateForm = () => {
+    for (const key in formData) {
+      if (formData[key].trim() === "") {
+        return false; // If any field is empty, return false
+      }
+    }
+    return true; // All fields are filled
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -23,9 +33,19 @@ const OPDForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Validate the form before submitting
+    if (!validateForm()) {
+      setResponseMessage("Please fill out all fields.");
+      return;
+    }
+
     console.log("OPD Form Data:", formData);
     try {
-      const response = await axios.post("/api/OPD", formData);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/OPD/${formData.userid}`,
+        formData
+      );
       console.log("Server Response:", response.data);
       setResponseMessage("Data submitted successfully!");
     } catch (error) {
@@ -41,8 +61,8 @@ const OPDForm = () => {
         <input
           className={styles.input}
           type="text"
-          name="userId"
-          value={formData.userId}
+          name="userid"
+          value={formData.userid}
           onChange={handleChange}
         />
       </label>

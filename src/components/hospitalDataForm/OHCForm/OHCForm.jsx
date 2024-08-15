@@ -4,12 +4,22 @@ import axios from "axios";
 
 const OHCForm = () => {
   const [formData, setFormData] = useState({
-    userId: "",
+    userid: "",
     date: "",
     doctor: "",
     prescription: "",
   });
   const [responseMessage, setResponseMessage] = useState("");
+
+  // Validation function to check if all fields are filled
+  const validateForm = () => {
+    for (const key in formData) {
+      if (formData[key].trim() === "") {
+        return false; // If any field is empty, return false
+      }
+    }
+    return true; // All fields are filled
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -21,9 +31,17 @@ const OHCForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // Validate the form before submitting
+    if (!validateForm()) {
+      setResponseMessage("Please fill out all fields.");
+      return;
+    }
     console.log("OHC Form Data:", formData);
     try {
-      const response = await axios.post("/api/ohc", formData);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/OHC/${formData.userid}`,
+        formData
+      );
       console.log("Server Response:", response.data);
       setResponseMessage("Data submitted successfully!");
     } catch (error) {
@@ -39,8 +57,8 @@ const OHCForm = () => {
         <input
           className={styles.input}
           type="text"
-          name="userId"
-          value={formData.userId}
+          name="userid"
+          value={formData.userid}
           onChange={handleChange}
         />
       </label>

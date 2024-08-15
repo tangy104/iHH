@@ -4,16 +4,26 @@ import axios from "axios";
 
 const IPDForm = () => {
   const [formData, setFormData] = useState({
-    userId: "",
-    admitNo: "",
-    admissionDate: "",
-    dischargeDate: "",
+    userid: "",
+    admit_no: "",
+    admission_date: "",
+    discharge_date: "",
     doctor: "",
     prescription: "",
     status: "",
   });
 
   const [responseMessage, setResponseMessage] = useState("");
+
+  // Validation function to check if all fields are filled
+  const validateForm = () => {
+    for (const key in formData) {
+      if (formData[key].trim() === "") {
+        return false; // If any field is empty, return false
+      }
+    }
+    return true; // All fields are filled
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -25,9 +35,17 @@ const IPDForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // Validate the form before submitting
+    if (!validateForm()) {
+      setResponseMessage("Please fill out all fields.");
+      return;
+    }
     console.log("IPD Form Data:", formData);
     try {
-      const response = await axios.post("/api/IPD", formData);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/IPD/${formData.userid}`,
+        formData
+      );
       console.log("Server Response:", response.data);
       setResponseMessage("Data submitted successfully!");
     } catch (error) {
@@ -43,8 +61,8 @@ const IPDForm = () => {
         <input
           className={styles.input}
           type="text"
-          name="userId"
-          value={formData.userId}
+          name="userid"
+          value={formData.userid}
           onChange={handleChange}
         />
       </label>
@@ -53,8 +71,8 @@ const IPDForm = () => {
         <input
           className={styles.input}
           type="text"
-          name="admitNo"
-          value={formData.admitNo}
+          name="admit_no"
+          value={formData.admit_no}
           onChange={handleChange}
         />
       </label>
@@ -63,8 +81,8 @@ const IPDForm = () => {
         <input
           className={styles.input}
           type="date"
-          name="admissionDate"
-          value={formData.admissionDate}
+          name="admission_date"
+          value={formData.admission_date}
           onChange={handleChange}
         />
       </label>
@@ -73,8 +91,8 @@ const IPDForm = () => {
         <input
           className={styles.input}
           type="date"
-          name="dischargeDate"
-          value={formData.dischargeDate}
+          name="discharge_date"
+          value={formData.discharge_date}
           onChange={handleChange}
         />
       </label>

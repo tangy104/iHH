@@ -13,22 +13,45 @@ const HospitalForm = () => {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <label style={{ margin: "5px" }} htmlFor="hospitalDataType">
-        Select Hospital Data Type:
-      </label>
-      <select
-        id="hospitalDataType"
-        value={selectedType}
-        onChange={handleTypeChange}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        padding: "1rem",
+        margin: "1rem",
+        marginTop: "1rem",
+        width: "80%",
+        maxWidth: "700px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          justifyContent: "center",
+          backgroundColor: "#f4f4f4",
+        }}
       >
-        <option value="">Select</option>
-        <option value="OHC">OHC</option>
-        <option value="OPD">OPD</option>
-        <option value="IPD">IPD</option>
-        <option value="Medicine">Medicine</option>
-        <option value="Pathology">Pathology</option>
-      </select>
+        <label
+          style={{ margin: "5px", alignSelf: "center" }}
+          htmlFor="hospitalDataType"
+        >
+          Select Hospital Data Type:
+        </label>
+        <select
+          id="hospitalDataType"
+          value={selectedType}
+          onChange={handleTypeChange}
+          style={{ margin: 5, padding: "0.1rem" }}
+        >
+          <option value="">Select</option>
+          <option value="OHC">OHC</option>
+          <option value="OPD">OPD</option>
+          <option value="IPD">IPD</option>
+          <option value="Medicine">Medicine</option>
+          <option value="Pathology">Pathology</option>
+        </select>
+      </div>
 
       {selectedType === "OHC" && <OHCForm />}
       {selectedType === "OPD" && <OPDForm />}

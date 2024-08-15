@@ -30,22 +30,22 @@ const EmployeeForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Validation function to check if all fields are filled
-  const validateForm = () => {
-    for (const key in formData) {
-      if (formData[key].trim() === "") {
-        return false; // If any field is empty, return false
-      }
-    }
-    return true; // All fields are filled
-  };
+  // // Validation function to check if all fields are filled
+  // const validateForm = () => {
+  //   for (const key in formData) {
+  //     if (formData[key].trim() === "") {
+  //       return false; // If any field is empty, return false
+  //     }
+  //   }
+  //   return true; // All fields are filled
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate the form before submitting
-    if (!validateForm()) {
-      setResponseMessage("Please fill out all fields.");
+    if (!formData.userid) {
+      setResponseMessage("Please fill id no.");
       return;
     }
     console.log("Employee Data:", formData);
@@ -65,7 +65,7 @@ const EmployeeForm = () => {
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h3 className={styles.h3}>HR Details</h3>
+        <h3 className={styles.h3}>Employee Details</h3>
         {/* {Object.keys(formData).map((key) => (
           <div key={key} className={styles.formGroup}>
             <label className={styles.label}>
@@ -110,15 +110,57 @@ const EmployeeForm = () => {
             onChange={handleChange}
           />
         </div>
-        <div className={styles.formGroup}>
+        {/* <div className={styles.formGroup}>
           <label className={styles.label}>Gender:</label>
-          <input
-            className={styles.input}
-            type="text"
+          <select
+            className={styles.input} // reuse the input styling for consistency
             name="gender"
             value={formData.gender}
             onChange={handleChange}
-          />
+          >
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Others">Others</option>
+          </select>
+        </div> */}
+        <div
+          style={{ display: "flex", marginTop: "1rem", marginBottom: "0.6rem" }}
+        >
+          <label className={styles.label} style={{ marginRight: 10 }}>
+            Gender:
+          </label>
+          <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                value="Male"
+                checked={formData.gender === "Male"}
+                onChange={handleChange}
+              />
+              Male
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                value="Female"
+                checked={formData.gender === "Female"}
+                onChange={handleChange}
+              />
+              Female
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                value="Others"
+                checked={formData.gender === "Others"}
+                onChange={handleChange}
+              />
+              Others
+            </label>
+          </div>
         </div>
         <div className={styles.formGroup}>
           <label className={styles.label}>Phone:</label>
