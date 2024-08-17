@@ -69,7 +69,8 @@ const AddShop = () => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: name === "shopid" ? parseInt(value, 10) || "" : value, // Convert to integer
+      // [name]: name === "shopid" ? parseInt(value, 10) || "" : value, // Convert to integer
+      [name]: value,
     }));
   };
 
@@ -99,7 +100,7 @@ const AddShop = () => {
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h3 className={styles.h3}>New Shop Details</h3>
-        {Object.keys(formData).map((key) => (
+        {/* {Object.keys(formData).map((key) => (
           <div key={key} className={styles.formGroup}>
             <label className={styles.label}>
               {key.charAt(0).toUpperCase() + key.slice(1)}:
@@ -112,7 +113,27 @@ const AddShop = () => {
               onChange={handleChange}
             />
           </div>
-        ))}
+        ))} */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Shop:</label>
+          <input
+            className={styles.input}
+            type="text"
+            name="shopid"
+            value={formData.shopid}
+            onChange={handleChange}
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Location:</label>
+          <input
+            className={styles.input}
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+          />
+        </div>
         <button className={styles.button} type="submit" disabled={loading}>
           {loading ? <div className={styles.spinner}></div> : "Submit"}
         </button>

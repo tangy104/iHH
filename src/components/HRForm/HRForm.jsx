@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./HRForm.module.css";
 import axios from "axios";
 
-const EmployeeForm = () => {
+const NewRegistration = () => {
   const [formData, setFormData] = useState({
     userid: "",
     name: "",
@@ -10,17 +10,10 @@ const EmployeeForm = () => {
     gender: "",
     phone: "",
     email: "",
-    join_date: "",
-    leaving_date: "",
-    // "Date of joining company": "",
-    // "Date of leaving company(if left)": "",
-    // division: "",
-    // grade: "",
-    // shopId: "",
-    // location: "",
-    // shift: "",
-    // grade: "",
-    // "Date of joining shop": "",
+    grade: "",
+    shopid: "shop1",
+    shift: "morning",
+    joining_date: "",
   });
 
   const [responseMessage, setResponseMessage] = useState("");
@@ -29,21 +22,8 @@ const EmployeeForm = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
-  // // Validation function to check if all fields are filled
-  // const validateForm = () => {
-  //   for (const key in formData) {
-  //     if (formData[key].trim() === "") {
-  //       return false; // If any field is empty, return false
-  //     }
-  //   }
-  //   return true; // All fields are filled
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate the form before submitting
     if (!formData.userid) {
       setResponseMessage("Please fill id no.");
       return;
@@ -65,21 +45,7 @@ const EmployeeForm = () => {
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h3 className={styles.h3}>Employee Details</h3>
-        {/* {Object.keys(formData).map((key) => (
-          <div key={key} className={styles.formGroup}>
-            <label className={styles.label}>
-              {key.charAt(0).toUpperCase() + key.slice(1)}:
-            </label>
-            <input
-              className={styles.input}
-              type="text"
-              name={key}
-              value={formData[key]}
-              onChange={handleChange}
-            />
-          </div>
-        ))} */}
+        <h3 className={styles.h3}>New Registration</h3>
         <div className={styles.formGroup}>
           <label className={styles.label}>User Id:</label>
           <input
@@ -110,19 +76,6 @@ const EmployeeForm = () => {
             onChange={handleChange}
           />
         </div>
-        {/* <div className={styles.formGroup}>
-          <label className={styles.label}>Gender:</label>
-          <select
-            className={styles.input} // reuse the input styling for consistency
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-          >
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Others">Others</option>
-          </select>
-        </div> */}
         <div
           style={{ display: "flex", marginTop: "1rem", marginBottom: "0.6rem" }}
         >
@@ -183,22 +136,51 @@ const EmployeeForm = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label className={styles.label}>Joining Date:</label>
+          <label className={styles.label}>Grade:</label>
           <input
             className={styles.input}
-            type="date"
-            name="join_date"
-            value={formData.join_date}
+            type="text"
+            name="grade"
+            value={formData.grade}
             onChange={handleChange}
           />
         </div>
         <div className={styles.formGroup}>
-          <label className={styles.label}>Leaving Date:</label>
+          <label className={styles.label}>Shop:</label>
+          <select
+            className={styles.input} // reuse the input styling for consistency
+            name="shopid"
+            value={formData.shopid}
+            onChange={handleChange}
+          >
+            {/* <option value="select">Select</option> */}
+            <option value="shop1">Shop1</option>
+            <option value="shop2">Shop2</option>
+            <option value="shop3">Shop3</option>
+            <option value="shop4">Shop4</option>
+          </select>
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Shift:</label>
+          <select
+            className={styles.input} // reuse the input styling for consistency
+            name="shift"
+            value={formData.shift}
+            onChange={handleChange}
+          >
+            {/* <option value="select">Select</option> */}
+            <option value="morning">Morning</option>
+            <option value="afternoon">Afternoon</option>
+            <option value="night">Night</option>
+          </select>
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Joining Date:</label>
           <input
             className={styles.input}
             type="date"
-            name="leaving_date"
-            value={formData.leaving_date}
+            name="joining_date"
+            value={formData.joining_date}
             onChange={handleChange}
           />
         </div>
@@ -207,6 +189,205 @@ const EmployeeForm = () => {
         </button>
         {responseMessage && <p>{responseMessage}</p>}
       </form>
+    </div>
+  );
+};
+
+const UpdateDetails = () => {
+  const [formData, setFormData] = useState({
+    userid: "",
+    shopChanged: "", // This field will not be sent in the Axios request
+    shopid: "shop1",
+    shift: "morning",
+    grade: "",
+    joining_date: "",
+    // leaving_date: "",
+  });
+
+  const [responseMessage, setResponseMessage] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.userid.trim()) {
+      setResponseMessage("Please enter your user ID.");
+      return;
+    }
+
+    // Create a copy of formData without the shopChanged field
+    const { shopChanged, ...dataToSubmit } = formData;
+    console.log("Updated data:", dataToSubmit);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/HR/${formData.userid}`,
+        dataToSubmit
+      );
+      console.log("Server Response:", response.data);
+      setResponseMessage("Data submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      setResponseMessage("Failed to submit data. Please try again.");
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <h3 className={styles.h3}>Employee Details</h3>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>User ID:</label>
+          <input
+            className={styles.input}
+            type="text"
+            name="userid"
+            value={formData.userid}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* <div className={styles.formGroup}>
+          <label className={styles.label}>Has the shop changed?</label>
+          <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="shopChanged"
+                value="yes"
+                checked={formData.shopChanged === "yes"}
+                onChange={handleChange}
+              />
+              Yes
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="shopChanged"
+                value="no"
+                checked={formData.shopChanged === "no"}
+                onChange={handleChange}
+              />
+              No
+            </label>
+          </div>
+        </div> */}
+
+        {/* Conditionally render additional fields if shopChanged is "yes" */}
+        {/* {formData.shopChanged === "yes" && ( */}
+        <>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>New shop:</label>
+            <select
+              className={styles.input}
+              name="shopid"
+              value={formData.shopid}
+              onChange={handleChange}
+            >
+              <option value="shop1">Shop1</option>
+              <option value="shop2">Shop2</option>
+              <option value="shop3">Shop3</option>
+              <option value="shop4">Shop4</option>
+            </select>
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Shift:</label>
+            <select
+              className={styles.input}
+              name="shift"
+              value={formData.shift}
+              onChange={handleChange}
+            >
+              <option value="morning">Morning</option>
+              <option value="afternoon">Afternoon</option>
+              <option value="night">Night</option>
+            </select>
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Grade:</label>
+            <input
+              className={styles.input}
+              type="text"
+              name="grade"
+              value={formData.grade}
+              onChange={handleChange}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Joining Date of new shop:</label>
+            <input
+              className={styles.input}
+              type="date"
+              name="joining_date"
+              value={formData.joining_date}
+              onChange={handleChange}
+            />
+          </div>
+        </>
+        {/* )} */}
+
+        <button className={styles.button} type="submit">
+          Submit
+        </button>
+        {responseMessage && (
+          <p className={styles.responseMessage}>{responseMessage}</p>
+        )}
+      </form>
+    </div>
+  );
+};
+
+const EmployeeForm = () => {
+  const [selectedType, setSelectedType] = useState("");
+
+  const handleTypeChange = (event) => {
+    setSelectedType(event.target.value);
+  };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        padding: "1rem",
+        margin: "1rem",
+        marginTop: "1rem",
+        width: "80%",
+        maxWidth: "700px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          justifyContent: "center",
+          backgroundColor: "#f4f4f4",
+        }}
+      >
+        <label
+          style={{ margin: "5px", alignSelf: "center" }}
+          htmlFor="plantDataType"
+        >
+          Select Employee Data Type:
+        </label>
+        <select
+          id="plantDataType"
+          value={selectedType}
+          onChange={handleTypeChange}
+          style={{ margin: 5, padding: "0.1rem" }}
+        >
+          <option value="">Select</option>
+          <option value="newRegistration">New registration</option>
+          <option value="updateDetails">Update employee details</option>
+        </select>
+      </div>
+
+      {selectedType === "newRegistration" && <NewRegistration />}
+      {selectedType === "updateDetails" && <UpdateDetails />}
     </div>
   );
 };
