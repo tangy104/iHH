@@ -3,11 +3,36 @@ import styles from "./PathologyForm.module.css";
 import axios from "axios";
 
 const PathologyForm = () => {
+  // Function to get today's date in yyyy-mm-dd format
+  const getTodayDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  // Options for different tests
+  const resultOptions = {
+    sugar: [
+      "Normal (70 - 100 mg/dL)",
+      "Elevated (100 - 120 mg/dL)",
+      "High (Greater than 120 mg/dL)",
+      "Low (Less than 70 mg/dL)",
+    ],
+    pressure: [
+      "Normal (80 - 120 mmHg)",
+      "Elevated (120 - 140 mmHg)",
+      "High (Greater than 140 mmHg)",
+      "Low (Less than 80 mmHg)",
+    ],
+  };
+
   const [formData, setFormData] = useState({
     userid: "",
-    date: "",
-    test: "sugar",
-    result: "",
+    date: getTodayDate(),
+    test: "sugar", // Default test
+    result: resultOptions.sugar[0], // Default result for "sugar" test
   });
 
   const [file, setFile] = useState(null);
@@ -15,6 +40,17 @@ const PathologyForm = () => {
   const [employeeDetails, setEmployeeDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date
+      .toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .replace(/\//g, "-");
+  };
 
   // Function to fetch employee details
   const fetchEmployeeDetails = async (userid) => {
@@ -26,7 +62,7 @@ const PathologyForm = () => {
         `${import.meta.env.VITE_API_BASE_URL}/api/HR/${userid}`
       );
       if (response.data.information) {
-        setEmployeeDetails(response.data.information);
+        setEmployeeDetails(response.data);
       } else {
         setEmployeeDetails(null);
         setError("Employee not found.");
@@ -65,10 +101,20 @@ const PathologyForm = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+    // Handle test change and update result based on the new test
+    if (name === "test") {
+      setFormData({
+        ...formData,
+        test: value,
+        result: resultOptions[value][0], // Set default result for the selected test
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleImageChange = (event) => {
@@ -104,9 +150,9 @@ const PathologyForm = () => {
       setResponseMessage("Data submitted successfully!");
       setFormData({
         userid: "",
-        date: "",
+        date: getTodayDate(),
         test: "sugar",
-        result: "",
+        result: resultOptions.sugar[0], // Reset to default result
       });
       setFile(null);
       setEmployeeDetails(null);
@@ -131,14 +177,25 @@ const PathologyForm = () => {
       {/* Display loading spinner, error, or employee details */}
       {loading && <p className={styles.loading}>Loading...</p>}
       {error && <p className={styles.error}>{error}</p>}
-      {employeeDetails && employeeDetails.name && (
+      {employeeDetails && employeeDetails.information.name && (
         <div className={styles.employeeDetails}>
-          <p>
-            <strong>Name:</strong> {employeeDetails.name}
-          </p>
-          <p>
-            <strong>Email:</strong> {employeeDetails.email}
-          </p>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <p>
+              <strong>Name:</strong> {employeeDetails.information.name}
+            </p>
+            <p>
+              <strong>Shop:</strong> {employeeDetails.working.shopid}
+            </p>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <p>
+              <strong>Email:</strong> {employeeDetails.information.email}
+            </p>
+            <p>
+              <strong>Joining date:</strong>{" "}
+              {formatDate(employeeDetails.information.joining_date)}
+            </p>
+          </div>
         </div>
       )}
 
@@ -164,20 +221,24 @@ const PathologyForm = () => {
         value={formData.test}
         onChange={handleChange}
       >
-        <option value="sugar">Sugar</option>
+        <option value="sugar">Blood Sugar</option>
         <option value="pressure">Blood Pressure</option>
       </select>
 
-      <label className={styles.label}>
-        Result:
-        <input
-          className={styles.input}
-          type="text"
-          name="result"
-          value={formData.result}
-          onChange={handleChange}
-        />
-      </label>
+      <label className={styles.label}>Result:</label>
+      <select
+        className={styles.input}
+        name="result"
+        value={formData.result}
+        onChange={handleChange}
+      >
+        {resultOptions[formData.test]?.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+
       <label className={styles.label}>
         Result document/slip:
         <input

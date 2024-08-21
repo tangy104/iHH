@@ -3,9 +3,17 @@ import styles from "./OHCForm.module.css";
 import axios from "axios";
 
 const OHCForm = () => {
+  // Function to get today's date in yyyy-mm-dd format
+  const getTodayDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
   const [formData, setFormData] = useState({
     userid: "",
-    date: "",
+    date: getTodayDate(),
     doctor: "",
     prescription: "",
   });
@@ -14,6 +22,17 @@ const OHCForm = () => {
   const [employeeDetails, setEmployeeDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date
+      .toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .replace(/\//g, "-");
+  };
 
   // Function to fetch employee details
   const fetchEmployeeDetails = async (userid) => {
@@ -25,7 +44,7 @@ const OHCForm = () => {
         `${import.meta.env.VITE_API_BASE_URL}/api/HR/${userid}`
       );
       if (response.data.information) {
-        setEmployeeDetails(response.data.information);
+        setEmployeeDetails(response.data);
       } else {
         setEmployeeDetails(null);
         setError("Employee not found.");
@@ -101,7 +120,7 @@ const OHCForm = () => {
       setResponseMessage("Data submitted successfully!");
       setFormData({
         userid: "",
-        date: "",
+        date: getTodayDate(),
         doctor: "",
         prescription: "",
       });
@@ -128,14 +147,25 @@ const OHCForm = () => {
       {/* Display loading spinner, error, or employee details */}
       {loading && <p className={styles.loading}>Loading...</p>}
       {error && <p className={styles.error}>{error}</p>}
-      {employeeDetails && employeeDetails.name && (
+      {employeeDetails && employeeDetails.information.name && (
         <div className={styles.employeeDetails}>
-          <p>
-            <strong>Name:</strong> {employeeDetails.name}
-          </p>
-          <p>
-            <strong>Email:</strong> {employeeDetails.email}
-          </p>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <p>
+              <strong>Name:</strong> {employeeDetails.information.name}
+            </p>
+            <p>
+              <strong>Shop:</strong> {employeeDetails.working.shopid}
+            </p>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <p>
+              <strong>Email:</strong> {employeeDetails.information.email}
+            </p>
+            <p>
+              <strong>Joining date:</strong>{" "}
+              {formatDate(employeeDetails.information.joining_date)}
+            </p>
+          </div>
         </div>
       )}
 

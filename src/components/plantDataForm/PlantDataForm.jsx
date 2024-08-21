@@ -3,9 +3,17 @@ import styles from "./PlantDataForm.module.css";
 import axios from "axios";
 
 const UpdateShop = () => {
+  // Function to get today's date in yyyy-mm-dd format
+  const getTodayDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
   const [formData, setFormData] = useState({
     shopid: "",
-    date: "",
+    date: getTodayDate(),
     temperature: "",
     co2_level: "",
     humidity: "",
@@ -28,7 +36,7 @@ const UpdateShop = () => {
       setResponseMessage("Data submitted successfully!");
       setFormData({
         shopid: "",
-        date: "",
+        date: getTodayDate(),
         temperature: "",
         co2_level: "",
         humidity: "",
