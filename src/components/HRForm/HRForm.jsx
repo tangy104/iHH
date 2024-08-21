@@ -10,8 +10,9 @@ const NewRegistration = () => {
     gender: "",
     phone: "",
     email: "",
-    grade: "",
+    grade: "A",
     shopid: "shop1",
+    distance: "0-5km",
     shift: "morning",
     joining_date: "",
   });
@@ -47,7 +48,7 @@ const NewRegistration = () => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <h3 className={styles.h3}>New Registration</h3>
         <div className={styles.formGroup}>
-          <label className={styles.label}>User Id:</label>
+          <label className={styles.label}>Employee code:</label>
           <input
             className={styles.input}
             type="text"
@@ -137,13 +138,17 @@ const NewRegistration = () => {
         </div>
         <div className={styles.formGroup}>
           <label className={styles.label}>Grade:</label>
-          <input
+          <select
             className={styles.input}
-            type="text"
             name="grade"
             value={formData.grade}
             onChange={handleChange}
-          />
+          >
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
         </div>
         <div className={styles.formGroup}>
           <label className={styles.label}>Shop:</label>
@@ -158,6 +163,22 @@ const NewRegistration = () => {
             <option value="shop2">Shop2</option>
             <option value="shop3">Shop3</option>
             <option value="shop4">Shop4</option>
+          </select>
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Distance from residence:</label>
+          <select
+            className={styles.input}
+            name="distance"
+            value={formData.distance}
+            onChange={handleChange}
+          >
+            <option value="0-5km">0-5 km</option>
+            <option value="5-10km">5-10 km</option>
+            <option value="10-20km">10-20 km</option>
+            <option value="20-30km">20-30 km</option>
+            <option value="30-40km">30-40 km</option>
+            <option value="40-50km">40-50 km</option>
           </select>
         </div>
         <div className={styles.formGroup}>
@@ -198,8 +219,9 @@ const UpdateDetails = () => {
     userid: "",
     shopChanged: "", // This field will not be sent in the Axios request
     shopid: "shop1",
+    distance: "0-5km",
     shift: "morning",
-    grade: "",
+    grade: "A",
     joining_date: "",
     // leaving_date: "",
   });
@@ -241,7 +263,7 @@ const UpdateDetails = () => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <h3 className={styles.h3}>Employee Details</h3>
         <div className={styles.formGroup}>
-          <label className={styles.label}>User ID:</label>
+          <label className={styles.label}>Employee code:</label>
           <input
             className={styles.input}
             type="text"
@@ -295,6 +317,22 @@ const UpdateDetails = () => {
             </select>
           </div>
           <div className={styles.formGroup}>
+            <label className={styles.label}>Distance from residence:</label>
+            <select
+              className={styles.input}
+              name="distance"
+              value={formData.distance}
+              onChange={handleChange}
+            >
+              <option value="0-5km">0-5 km</option>
+              <option value="5-10km">5-10 km</option>
+              <option value="10-20km">10-20 km</option>
+              <option value="20-30km">20-30 km</option>
+              <option value="30-40km">30-40 km</option>
+              <option value="40-50km">40-50 km</option>
+            </select>
+          </div>
+          <div className={styles.formGroup}>
             <label className={styles.label}>Shift:</label>
             <select
               className={styles.input}
@@ -309,13 +347,17 @@ const UpdateDetails = () => {
           </div>
           <div className={styles.formGroup}>
             <label className={styles.label}>Grade:</label>
-            <input
+            <select
               className={styles.input}
-              type="text"
               name="grade"
               value={formData.grade}
               onChange={handleChange}
-            />
+            >
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
           </div>
           <div className={styles.formGroup}>
             <label className={styles.label}>Joining Date of new shop:</label>
