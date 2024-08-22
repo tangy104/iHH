@@ -91,12 +91,14 @@ const PathologyForm = () => {
 
   // Validation function to check if all fields are filled
   const validateForm = () => {
-    for (const key in formData) {
-      if (formData[key].trim() === "") {
-        return false;
-      }
-    }
-    return file !== null;
+    // for (const key in formData) {
+    //   if (formData[key].trim() === "") {
+    //     return false;
+    //   }
+    // }
+    // return file !== null;
+
+    return formData.userid.trim() !== "";
   };
 
   const handleChange = (event) => {
@@ -125,7 +127,8 @@ const PathologyForm = () => {
     event.preventDefault();
     // Validate the form before submitting
     if (!validateForm()) {
-      setResponseMessage("Please fill out all fields and upload file.");
+      // setResponseMessage("Please fill out all fields and upload file.");
+      setResponseMessage("Please enter Employee code.");
       return;
     }
     console.log("Pathology Form Data:", formData);

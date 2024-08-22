@@ -76,12 +76,13 @@ const OPDForm = () => {
 
   // Validation function to check if all fields are filled
   const validateForm = () => {
-    for (const key in formData) {
-      if (formData[key].trim() === "") {
-        return false;
-      }
-    }
-    return file !== null;
+    // for (const key in formData) {
+    //   if (formData[key].trim() === "") {
+    //     return false;
+    //   }
+    // }
+    // return file !== null;
+    return formData.userid.trim() !== "";
   };
 
   const handleChange = (event) => {
@@ -101,7 +102,8 @@ const OPDForm = () => {
 
     // Validate the form before submitting
     if (!validateForm()) {
-      setResponseMessage("Please fill out all fields and upload a file.");
+      // setResponseMessage("Please fill out all fields and upload a file.");
+      setResponseMessage("Please enter the Employee code.");
       return;
     }
 

@@ -72,12 +72,16 @@ const OHCForm = () => {
   }, [formData.userid]);
 
   const validateForm = () => {
-    for (const key in formData) {
-      if (formData[key].trim() === "") {
-        return false;
-      }
-    }
-    return file !== null;
+    //All fields mandatory validation check
+    // for (const key in formData) {
+    //   if (formData[key].trim() === "") {
+    //     return false;
+    //   }
+    // }
+    // return file !== null;
+
+    //validation check for only userid
+    return formData.userid.trim() !== "";
   };
 
   const handleChange = (event) => {
@@ -96,7 +100,8 @@ const OHCForm = () => {
     event.preventDefault();
 
     if (!validateForm()) {
-      setResponseMessage("Please fill out all fields and upload a file.");
+      // setResponseMessage("Please fill out all fields and upload a file.");
+      setResponseMessage("Please enter Employee code.");
       return;
     }
 
