@@ -1,42 +1,39 @@
-.app {
-  font-family: Arial, sans-serif;
-  max-width: 1200px;
-  margin: 0 auto;
+.container {
   padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-h1 {
+.header {
   text-align: center;
   margin-bottom: 20px;
 }
 
-.buttons {
+.formGroup {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  /* margin-bottom: 20px; */
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-input[type="text"] {
+.inputField {
+  margin: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  margin-right: 10px;
+  font-size: 1rem;
+  width: 300px;
+  max-width: 90%;
 }
 
-button {
-  padding: 10px 15px;
-  border: none;
+.button {
+  padding: 10px 20px;
+  font-size: 1rem;
   background-color: #007bff;
+  border-radius: 8px;
   color: white;
-  border-radius: 5px;
+  border: none;
   cursor: pointer;
-  font-size: 16px;
 }
 
-button:hover {
+.button:hover {
   background-color: #0056b3;
 }
 
@@ -44,65 +41,47 @@ button:hover {
   margin-top: 20px;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+.tableSection {
+  margin-bottom: 30px;
 }
 
-thead {
-  background-color: #007bff;
-  color: white;
-}
-
-th, td {
+.tableSection h3 {
   text-align: left;
-  padding: 10px;
-  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  color: #333;
 }
 
-tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-/* Responsive table */
 .tableWrapper {
   overflow-x: auto;
+  /* Allow horizontal scrolling */
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f4f4f4;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
 @media (max-width: 768px) {
-  th, td {
-    padding: 8px;
-    font-size: 14px;
+  .inputField,
+  .button {
+    width: 90%;
   }
 
-  table {
-    font-size: 14px;
-  }
-
-  input[type="text"] {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  button {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  th, td {
-    padding: 6px;
-    font-size: 12px;
-  }
-
-  table {
-    font-size: 12px;
+  .table {
+    font-size: 0.9rem;
   }
 }
