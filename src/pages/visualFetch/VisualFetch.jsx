@@ -284,7 +284,7 @@ const VisualFetch = () => {
 
   const renderTableSection = (title, data, fields) => {
     // Handle cases where the data is undefined or null
-    if (!data) {
+    if (!data.userDetails) {
       return null;
     }
     return (
@@ -335,13 +335,13 @@ const VisualFetch = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.header}>Data Fetch Dashboard</h1>
+      <h1 className={styles.header}>Analytics</h1>
 
       <div className={styles.formGroup}>
         <input
           type="text"
           className={styles.inputField}
-          placeholder="Enter User ID"
+          placeholder="Enter Employee code"
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
         />
@@ -365,64 +365,69 @@ const VisualFetch = () => {
         </button>
       </div>
 
-      {data && (
-        <div className={styles.dataContainer}>
-          {renderTableSection("User Details", data.userDetails, [
-            "userid",
-            "name",
-            "email",
-            "phone",
-            "gender",
-            "dob",
-          ])}
-          {renderTableSection("Current Shop", data.currentShop, [
-            "shopid",
-            "location",
-          ])}
-          {renderTableSection("User Medical - IPD", data.userMedical?.ipd, [
-            "admit_no",
-            "admit_date",
-            "discharge_date",
-            "doctor",
-            "prescription",
-          ])}
-          {renderTableSection("User Medical - OHC", data.userMedical?.ohc, [
-            "date",
-            "doctor",
-            "prescription",
-          ])}
-          {renderTableSection("User Medical - OPD", data.userMedical?.opd, [
-            "date",
-            "doctor",
-            "prescription",
-            "status",
-          ])}
-          {renderTableSection("Pathology", data.userMedical?.pathology, [
-            "test",
-            "result",
-            "date",
-          ])}
-          {renderTableSection("Medicine", data.userMedical?.medicine, [
-            "medicine",
-            "doctor",
-            "date",
-          ])}
-          {renderTableSection("User Work Details", data.userWork, [
-            "shopid",
-            "joining_date",
-            "shift",
-            "grade",
-            "distance",
-          ])}
-          {renderTableSection("Shop Environment", data.shopEnvironment, [
-            "shopid",
-            "date",
-            "temperature",
-            "humidity",
-            "co2_label",
-          ])}
-        </div>
-      )}
+      {data &&
+        (data.userDetails ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            Employee code does not exists.
+          </div>
+        ) : (
+          <div className={styles.dataContainer}>
+            {renderTableSection("User Details", data.userDetails, [
+              "userid",
+              "name",
+              "email",
+              "phone",
+              "gender",
+              "dob",
+            ])}
+            {renderTableSection("Current Shop", data.currentShop, [
+              "shopid",
+              "location",
+            ])}
+            {renderTableSection("User Medical - IPD", data.userMedical?.ipd, [
+              "admit_no",
+              "admit_date",
+              "discharge_date",
+              "doctor",
+              "prescription",
+            ])}
+            {renderTableSection("User Medical - OHC", data.userMedical?.ohc, [
+              "date",
+              "doctor",
+              "prescription",
+            ])}
+            {renderTableSection("User Medical - OPD", data.userMedical?.opd, [
+              "date",
+              "doctor",
+              "prescription",
+              "status",
+            ])}
+            {renderTableSection("Pathology", data.userMedical?.pathology, [
+              "test",
+              "result",
+              "date",
+            ])}
+            {renderTableSection("Medicine", data.userMedical?.medicine, [
+              "medicine",
+              "doctor",
+              "date",
+            ])}
+            {renderTableSection("User Work Details", data.userWork, [
+              "shopid",
+              "joining_date",
+              "shift",
+              "grade",
+              "distance",
+            ])}
+            {renderTableSection("Shop Environment", data.shopEnvironment, [
+              "shopid",
+              "date",
+              "temperature",
+              "humidity",
+              "co2_label",
+            ])}
+          </div>
+        ))}
     </div>
   );
 };
