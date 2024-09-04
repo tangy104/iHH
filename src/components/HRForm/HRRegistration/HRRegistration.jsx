@@ -15,6 +15,11 @@ const NewRegistration = () => {
     distance: "0-5km",
     shift: "morning",
     joining_date: "",
+    hasAllergies: "No",
+    allergy: "",
+    hasMedicineResistant: "No",
+    medicine_resistant: "",
+    blood_group: "",
   });
 
   const [responseMessage, setResponseMessage] = useState("");
@@ -29,11 +34,21 @@ const NewRegistration = () => {
       setResponseMessage("Please fill id no.");
       return;
     }
-    console.log("Employee Data:", formData);
+    // Prepare data for submission, excluding unnecessary fields
+    const { hasAllergies, hasMedicineResistant, ...submissionData } = formData;
+    const dataToSubmit = {
+      ...submissionData,
+      ...(hasAllergies === "Yes" && { allergy: formData.allergy }),
+      ...(hasMedicineResistant === "Yes" && {
+        medicine_resistant: formData.medicine_resistant,
+      }),
+    };
+
+    console.log("Employee Data:", dataToSubmit);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/HR/`,
-        formData
+        dataToSubmit
       );
       console.log("Server Response:", response.data);
       setResponseMessage("Data submitted successfully!");
@@ -49,6 +64,11 @@ const NewRegistration = () => {
         distance: "0-5km",
         shift: "morning",
         joining_date: "",
+        hasAllergies: "No",
+        allergy: "",
+        hasMedicineResistant: "No",
+        medicine_resistant: "",
+        blood_group: "",
       });
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -218,6 +238,108 @@ const NewRegistration = () => {
             onChange={handleChange}
           />
         </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Blood Group:</label>
+          <select
+            className={styles.input}
+            name="blood_group"
+            value={formData.blood_group}
+            onChange={handleChange}
+          >
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Do you have any allergies?</label>
+          <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="hasAllergies"
+                value="Yes"
+                checked={formData.hasAllergies === "Yes"}
+                onChange={handleChange}
+              />
+              Yes
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="hasAllergies"
+                value="No"
+                checked={formData.hasAllergies === "No"}
+                onChange={handleChange}
+              />
+              No
+            </label>
+          </div>
+        </div>
+        {formData.hasAllergies === "Yes" && (
+          <div className={styles.formGroup}>
+            <label className={styles.label}>
+              Please specify your allergies:
+            </label>
+            <input
+              className={styles.input}
+              type="text"
+              name="allergy"
+              value={formData.allergy}
+              onChange={handleChange}
+            />
+          </div>
+        )}
+
+        {/* Medicine Resistant Section */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            Do you have any medicine resistances?
+          </label>
+          <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="hasMedicineResistant"
+                value="Yes"
+                checked={formData.hasMedicineResistant === "Yes"}
+                onChange={handleChange}
+              />
+              Yes
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="hasMedicineResistant"
+                value="No"
+                checked={formData.hasMedicineResistant === "No"}
+                onChange={handleChange}
+              />
+              No
+            </label>
+          </div>
+        </div>
+        {formData.hasMedicineResistant === "Yes" && (
+          <div className={styles.formGroup}>
+            <label className={styles.label}>
+              Please specify your medicine resistances:
+            </label>
+            <input
+              className={styles.input}
+              type="text"
+              name="medicine_resistant"
+              value={formData.medicine_resistant}
+              onChange={handleChange}
+            />
+          </div>
+        )}
+
         <button className={styles.button} type="submit">
           Submit
         </button>
