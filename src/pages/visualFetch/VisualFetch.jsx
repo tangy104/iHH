@@ -223,6 +223,8 @@ import axios from "axios";
 import dayjs from "dayjs";
 import styles from "./VisualFetch.module.css";
 
+import ShopEnvironmentGraph from "../../components/visualizations/graphs/shopEnvironmentGraph";
+
 const VisualFetch = () => {
   const [userId, setUserId] = useState("");
   const [timeRange, setTimeRange] = useState("");
@@ -276,15 +278,99 @@ const VisualFetch = () => {
         }
       );
       console.log("Data fetched successfully:", response.data);
-      setData(response.data);
+      // setData(response.data);
+      const fetchedData = response.data;
+
+      // Calculate visit counts and days since the last visit
+      const visitCounts = {
+        ipd: fetchedData.userMedical?.ipd.length || 0,
+        opd: fetchedData.userMedical?.opd.length || 0,
+        medicine: fetchedData.userMedical?.medicine.length || 0,
+        ohc: fetchedData.userMedical?.ohc.length || 0,
+        pathology: fetchedData.userMedical?.pathology.length || 0,
+      };
+
+      const mostRecentVisit = Math.max(
+        ...(fetchedData.userMedical?.ipd.map((item) =>
+          dayjs(item.discharge_date).valueOf()
+        ) || []),
+        ...(fetchedData.userMedical?.opd.map((item) =>
+          dayjs(item.date).valueOf()
+        ) || []),
+        ...(fetchedData.userMedical?.medicine.map((item) =>
+          dayjs(item.date).valueOf()
+        ) || []),
+        ...(fetchedData.userMedical?.ohc.map((item) =>
+          dayjs(item.date).valueOf()
+        ) || []),
+        ...(fetchedData.userMedical?.pathology.map((item) =>
+          dayjs(item.date).valueOf()
+        ) || [])
+      );
+
+      const daysSinceLastVisit = mostRecentVisit
+        ? dayjs().diff(dayjs(mostRecentVisit), "day")
+        : "N/A";
+
+      setData({
+        ...fetchedData,
+        visitCounts,
+        daysSinceLastVisit,
+      });
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
+  const renderCountsAndLastVisit = () => {
+    if (!data) return null;
+
+    return (
+      <div className={styles.countsSection}>
+        <h3>Hospital Visits Overview</h3>
+        <div className={styles.tableWrapper}>
+          <p>Days since last visit: {data.daysSinceLastVisit}</p>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>No of visits</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>IPD</td>
+                <td>{data.visitCounts.ipd}</td>
+              </tr>
+              <tr>
+                <td>OPD</td>
+                <td>{data.visitCounts.opd}</td>
+              </tr>
+              <tr>
+                <td>Medicine</td>
+                <td>{data.visitCounts.medicine}</td>
+              </tr>
+              <tr>
+                <td>OHC</td>
+                <td>{data.visitCounts.ohc}</td>
+              </tr>
+              <tr>
+                <td>Pathology</td>
+                <td>{data.visitCounts.pathology}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
   const renderTableSection = (title, data, fields) => {
     // Handle cases where the data is undefined or null
-    if (!data.userDetails) {
+    // if (!data.userDetails) {
+    //   return null;
+    // }
+    if (!data || data.length === 0) {
       return null;
     }
     return (
@@ -366,11 +452,7 @@ const VisualFetch = () => {
       </div>
 
       {data &&
-        (data.userDetails ? (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            Employee code does not exists.
-          </div>
-        ) : (
+        (data.userDetails.id ? (
           <div className={styles.dataContainer}>
             {renderTableSection("User Details", data.userDetails, [
               "userid",
@@ -380,9 +462,17 @@ const VisualFetch = () => {
               "gender",
               "dob",
             ])}
+            {renderCountsAndLastVisit()}
             {renderTableSection("Current Shop", data.currentShop, [
               "shopid",
               "location",
+            ])}
+            {renderTableSection("User Work Details", data.userWork, [
+              "shopid",
+              "joining_date",
+              "shift",
+              "grade",
+              "distance",
             ])}
             {renderTableSection("User Medical - IPD", data.userMedical?.ipd, [
               "admit_no",
@@ -412,13 +502,7 @@ const VisualFetch = () => {
               "doctor",
               "date",
             ])}
-            {renderTableSection("User Work Details", data.userWork, [
-              "shopid",
-              "joining_date",
-              "shift",
-              "grade",
-              "distance",
-            ])}
+
             {renderTableSection("Shop Environment", data.shopEnvironment, [
               "shopid",
               "date",
@@ -427,7 +511,12 @@ const VisualFetch = () => {
               "co2_label",
             ])}
           </div>
+        ) : (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            Employee code does not exists.
+          </div>
         ))}
+      <ShopEnvironmentGraph data={data && data.shopEnvironment} />
     </div>
   );
 };

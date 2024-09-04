@@ -52,7 +52,7 @@ const MainForm = () => {
           >
             Hospital Data
           </li>
-          {/* Add more options here if needed */}
+          {/* more options here if needed */}
         </ul>
       </nav>
       <div className={styles.formContainer}>{renderForm()}</div>

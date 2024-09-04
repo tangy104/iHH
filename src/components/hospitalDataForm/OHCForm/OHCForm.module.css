@@ -60,6 +60,7 @@
   padding: 2px;
   background-color: #f9f9f9;
   border-radius: 5px;
+  position: relative; 
 }
 
 .loading {
@@ -77,4 +78,16 @@
 .responseMessage {
   margin-top: 20px;
   font-weight: bold;
+}
+
+.moreDetailsButton {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  height:1rem;
+  position:absolute;
+  right:5px;
+  top:5px;
+   
 }

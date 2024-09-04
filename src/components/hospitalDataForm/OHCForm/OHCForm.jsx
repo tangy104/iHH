@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import styles from "./OHCForm.module.css";
 import axios from "axios";
+import styles from "./OHCForm.module.css";
+
+import Modal from "../modal/MoreDetailsModal";
 
 const OHCForm = () => {
   // Function to get today's date in yyyy-mm-dd format
@@ -23,6 +25,11 @@ const OHCForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date
@@ -43,6 +50,7 @@ const OHCForm = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/HR/${userid}`
       );
+      console.log("OHC:", response.data);
       if (response.data.information) {
         setEmployeeDetails(response.data);
       } else {
@@ -171,6 +179,13 @@ const OHCForm = () => {
               {formatDate(employeeDetails.information.joining_date)}
             </p>
           </div>
+          <button
+            type="button"
+            onClick={openModal}
+            className={styles.moreDetailsButton}
+          >
+            more details &#8599;
+          </button>
         </div>
       )}
 
@@ -179,6 +194,50 @@ const OHCForm = () => {
           No details available for this Employee ID.
         </p>
       )}
+
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        {employeeDetails && employeeDetails.information.name && (
+          <>
+            <h2>Employee Details</h2>
+            <p>
+              <strong>Name:</strong> {employeeDetails.information.name}
+            </p>
+            <p>
+              <strong>Email:</strong> {employeeDetails.information.email}
+            </p>
+            <p>
+              <strong>Phone:</strong> {employeeDetails.information.phone}
+            </p>
+            <p>
+              <strong>Gender:</strong> {employeeDetails.information.gender}
+            </p>
+            <p>
+              <strong>Date of Birth:</strong>{" "}
+              {formatDate(employeeDetails.information.dob)}
+            </p>
+            <p>
+              <strong>Grade:</strong> {employeeDetails.working.grade}
+            </p>
+            <p>
+              <strong>Shift:</strong> {employeeDetails.working.shift}
+            </p>
+            <p>
+              <strong>Distance to Work:</strong>{" "}
+              {employeeDetails.working.distance}
+            </p>
+            <p>
+              <strong>Joining Date:</strong>{" "}
+              {formatDate(employeeDetails.information.joining_date)}
+            </p>
+            <p>
+              <strong>Leaving Date:</strong>
+              {employeeDetails.information.leaving_date
+                ? formatDate(employeeDetails.information.leaving_date)
+                : "Still working"}
+            </p>
+          </>
+        )}
+      </Modal>
 
       <label className={styles.label}>
         Date:
