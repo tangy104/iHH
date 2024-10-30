@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { useState, useContext } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../states/AuthContext";
 import styles from "./Navbar.module.css";
 
 import logo from "../../assets/images/logo.png";
@@ -7,10 +8,13 @@ import ham from "../../assets/images/ham.png";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
+  const { isAuthenticated, userRole } = useContext(AuthContext);
 
-  console.log("Current path:", currentPath);
   const [showNavbar, setShowNavbar] = useState(false);
+  const [showDropdownSignUp, setShowDropdownSignUp] = useState(false);
+  const [showDropdownSignIn, setShowDropdownSignIn] = useState(false);
 
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
@@ -18,6 +22,30 @@ const Navbar = () => {
 
   const handleNavLinkClick = () => {
     setShowNavbar(false);
+  };
+
+  const handleMouseEnterSignUp = () => {
+    setShowDropdownSignUp(true);
+  };
+
+  const handleMouseLeaveSignUp = () => {
+    setShowDropdownSignUp(false);
+  };
+  const handleMouseEnterSignIn = () => {
+    setShowDropdownSignIn(true);
+  };
+
+  const handleMouseLeaveSignIn = () => {
+    setShowDropdownSignIn(false);
+  };
+
+  const handleRoleSelectSignUp = (role) => {
+    setShowDropdownSignUp(false);
+    navigate(`/signUp/${role}`);
+  };
+  const handleRoleSelectSignIn = (role) => {
+    setShowDropdownSignIn(false);
+    navigate(`/signIn/${role}`);
   };
 
   return (
@@ -36,7 +64,7 @@ const Navbar = () => {
               fontStyle: "italic",
             }}
           >
-            intelligent Health Index
+            Intelligent Health Index
           </div>
         </div>
         <div className={styles.menuIcon} onClick={handleShowNavbar}>
@@ -50,16 +78,6 @@ const Navbar = () => {
           className={`${styles.navElements} ${showNavbar ? styles.active : ""}`}
         >
           <ul>
-            {/* <li>
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ""
-                }
-              >
-                Home
-              </NavLink>
-            </li> */}
             <li>
               <NavLink
                 to="/form"
@@ -82,26 +100,50 @@ const Navbar = () => {
                 Analytics
               </NavLink>
             </li>
-            {/* <li>
-              <NavLink
-                to="/about"
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ""
-                }
-              >
-                About
-              </NavLink>
-            </li> */}
-            {/* <li>
-              <NavLink
-                to="/contact"
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ""
-                }
-              >
-                Contact
-              </NavLink>
-            </li> */}
+            <li
+              onMouseEnter={handleMouseEnterSignUp}
+              onMouseLeave={handleMouseLeaveSignUp}
+              style={{ position: "relative", cursor: "pointer" }}
+            >
+              <span className={styles.signupLink}>SignUp</span>
+              {showDropdownSignUp && (
+                <div className={styles.dropdown}>
+                  <ul>
+                    <li onClick={() => handleRoleSelectSignUp("employee")}>
+                      Employee
+                    </li>
+                    <li onClick={() => handleRoleSelectSignUp("doctor")}>
+                      Doctor
+                    </li>
+                    <li onClick={() => handleRoleSelectSignUp("admin")}>
+                      Admin
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </li>
+            <li
+              onMouseEnter={handleMouseEnterSignIn}
+              onMouseLeave={handleMouseLeaveSignIn}
+              style={{ position: "relative", cursor: "pointer" }}
+            >
+              <span className={styles.signupLink}>SignIn</span>
+              {showDropdownSignIn && (
+                <div className={styles.dropdown}>
+                  <ul>
+                    <li onClick={() => handleRoleSelectSignIn("employee")}>
+                      Employee
+                    </li>
+                    <li onClick={() => handleRoleSelectSignIn("doctor")}>
+                      Doctor
+                    </li>
+                    <li onClick={() => handleRoleSelectSignIn("admin")}>
+                      Admin
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </li>
           </ul>
         </div>
       </div>

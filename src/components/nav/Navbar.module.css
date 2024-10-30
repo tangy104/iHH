@@ -59,6 +59,9 @@ body {
 .navElements ul li:not(:last-child) {
   margin-right: 60px;
 }
+.navElements ul li:last-child {
+  margin-right: 50px;
+}
 
 .navElements ul a {
   font-size: 16px;
@@ -86,6 +89,46 @@ body {
 .inactiveLink {
   color: #2f234f;
 }
+
+.dropdown {
+  position: absolute;
+  top:80%;
+  left:0;
+  background-color: #fef7e5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px; /* Space between the dropdown and the parent element */
+  z-index: 2;
+  /* background-color: yellow; */
+  width:95px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);  */
+}
+
+.dropdown ul {
+  /* background-color: red; */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margin */
+  list-style-type: none; /* Remove bullets */
+  display: flex; /* Use flexbox to create a column layout */
+  flex-direction: column; /* Stack items vertically */
+  border-radius: 4px;
+  /* width:100%; */
+}
+
+.dropdown li {
+  /* background-color: pink; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  width: 75%;
+  padding: 8px 12px;
+  cursor: pointer; /* Change cursor on hover */
+}
+
+.dropdown li:hover {
+  background-color: #ddd; /* Change background on hover */
+}
+
+
 
 @media (max-width: 768px) {
   .navElements ul li:not(:last-child) {
@@ -119,7 +162,36 @@ body {
   }
 
   .navElements ul li {
+    position: relative;
     margin-right: unset;
     margin-top: 22px;
+  }
+
+  /* Adjust the dropdown styling specifically for mobile view */
+  .navElements ul li:hover .dropdown {
+    display: block;
+    position: relative; /* Remove absolute positioning */
+    width: 100%; /* Make dropdown width 100% of its parent */
+    margin-top: 0px; /* Space between 'SignUp' and dropdown items */
+    border: none;
+    box-shadow: none;
+  }
+
+  .dropdown {
+    display: none; /* Hide by default */
+    flex-direction: column;
+  }
+  
+  .navElements ul li:hover .dropdown {
+    display: flex; /* Show dropdown on hover for mobile view */
+  }
+  
+  .dropdown li {
+    padding: 5px;
+    text-align: center;
+  }
+  
+  .dropdown li:hover {
+    background-color: #ddd; /* Change background on hover */
   }
 }

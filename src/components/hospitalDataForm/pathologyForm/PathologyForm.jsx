@@ -26,6 +26,18 @@ const PathologyForm = () => {
       "High (Greater than 140 mmHg)",
       "Low (Less than 80 mmHg)",
     ],
+    temperature: [
+      "Normal (80 - 120 mmHg)",
+      "Elevated (120 - 140 mmHg)",
+      "High (Greater than 140 mmHg)",
+      "Low (Less than 80 mmHg)",
+    ],
+    heartRate: [
+      "Normal (80 - 120 mmHg)",
+      "Elevated (120 - 140 mmHg)",
+      "High (Greater than 140 mmHg)",
+      "Low (Less than 80 mmHg)",
+    ],
   };
 
   const [formData, setFormData] = useState({
@@ -39,6 +51,7 @@ const PathologyForm = () => {
   const [responseMessage, setResponseMessage] = useState("");
   const [employeeDetails, setEmployeeDetails] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState("");
 
   const formatDate = (dateString) => {
@@ -125,6 +138,7 @@ const PathologyForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setSubmitLoading(true);
     // Validate the form before submitting
     if (!validateForm()) {
       // setResponseMessage("Please fill out all fields and upload file.");
@@ -162,6 +176,31 @@ const PathologyForm = () => {
     } catch (error) {
       console.error("Error submitting data:", error);
       setResponseMessage("Failed to submit data. Please try again.");
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  const getBackgroundColor = (option) => {
+    switch (option) {
+      case "Normal (70 - 100 mg/dL)":
+        return "green";
+      case "Elevated (100 - 120 mg/dL)":
+        return "#FFA500";
+      case "High (Greater than 120 mg/dL)":
+        return "#FF0000";
+      case "Low (Less than 70 mg/dL)":
+        return "#0000FF";
+      case "Normal (80 - 120 mmHg)":
+        return "green";
+      case "Elevated (120 - 140 mmHg)":
+        return "#FFA500";
+      case "High (Greater than 140 mmHg)":
+        return "#FF0000";
+      case "Low (Less than 80 mmHg)":
+        return "#0000FF";
+      default:
+        return "#FFFFFF";
     }
   };
 
@@ -226,17 +265,33 @@ const PathologyForm = () => {
       >
         <option value="sugar">Blood Sugar</option>
         <option value="pressure">Blood Pressure</option>
+        <option value="heartRate">Heart Rate</option>
+        <option value="temperature">Body Temperature</option>
+        <option value="temperature">Haemoglobin</option>
+        <option value="temperature">ECG</option>
+        <option value="temperature">MRI</option>
       </select>
 
       <label className={styles.label}>Result:</label>
       <select
-        className={styles.input}
+        // className={styles.inputResult}
+        style={{
+          backgroundColor: getBackgroundColor(formData.result),
+          color: "white",
+        }}
         name="result"
         value={formData.result}
         onChange={handleChange}
       >
         {resultOptions[formData.test]?.map((option) => (
-          <option key={option} value={option}>
+          <option
+            style={{
+              backgroundColor: getBackgroundColor(option),
+              color: "white",
+            }}
+            key={option}
+            value={option}
+          >
             {option}
           </option>
         ))}
@@ -245,15 +300,18 @@ const PathologyForm = () => {
       <label className={styles.label}>
         Result document/slip:
         <input
-          className={styles.input}
+          className={styles.inputResult}
           type="file"
           name="file"
           accept=".jpg,.jpeg,.png,.pdf"
           onChange={handleImageChange}
         />
       </label>
-      <button className={styles.button} type="submit">
-        Submit
+      <button
+        className={submitLoading ? styles.spinner : styles.button}
+        type="submit"
+      >
+        {submitLoading ? null : "Submit"}
       </button>
       {responseMessage && <p>{responseMessage}</p>}
     </form>
