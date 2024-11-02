@@ -10,7 +10,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
-  const { isAuthenticated, userRole } = useContext(AuthContext);
+  const { isAuthenticated, userRole, logout } = useContext(AuthContext);
 
   const [showNavbar, setShowNavbar] = useState(false);
   const [showDropdownSignUp, setShowDropdownSignUp] = useState(false);
@@ -78,72 +78,102 @@ const Navbar = () => {
           className={`${styles.navElements} ${showNavbar ? styles.active : ""}`}
         >
           <ul>
-            <li>
-              <NavLink
-                to="/form"
-                className={({ isActive }) =>
-                  isActive || currentPath === "/" ? styles.activeLink : ""
-                }
-                onClick={handleNavLinkClick}
-              >
-                Form
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/analytics"
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ""
-                }
-                onClick={handleNavLinkClick}
-              >
-                Analytics
-              </NavLink>
-            </li>
-            <li
-              onMouseEnter={handleMouseEnterSignUp}
-              onMouseLeave={handleMouseLeaveSignUp}
-              style={{ position: "relative", cursor: "pointer" }}
-            >
-              <span className={styles.signupLink}>SignUp</span>
-              {showDropdownSignUp && (
-                <div className={styles.dropdown}>
-                  <ul>
-                    <li onClick={() => handleRoleSelectSignUp("employee")}>
-                      Employee
+            {/* Conditional rendering based on authentication and role */}
+            {isAuthenticated ? (
+              <>
+                {userRole === "admin" && (
+                  <>
+                    <li>
+                      <NavLink
+                        to="/form"
+                        className={({ isActive }) =>
+                          isActive || currentPath === "/"
+                            ? styles.activeLink
+                            : ""
+                        }
+                        onClick={handleNavLinkClick}
+                      >
+                        Form
+                      </NavLink>
                     </li>
-                    <li onClick={() => handleRoleSelectSignUp("doctor")}>
-                      Doctor
+                    <li>
+                      <NavLink
+                        to="/analytics"
+                        className={({ isActive }) =>
+                          isActive ? styles.activeLink : ""
+                        }
+                        onClick={handleNavLinkClick}
+                      >
+                        Analytics
+                      </NavLink>
                     </li>
-                    <li onClick={() => handleRoleSelectSignUp("admin")}>
-                      Admin
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </li>
-            <li
-              onMouseEnter={handleMouseEnterSignIn}
-              onMouseLeave={handleMouseLeaveSignIn}
-              style={{ position: "relative", cursor: "pointer" }}
-            >
-              <span className={styles.signupLink}>SignIn</span>
-              {showDropdownSignIn && (
-                <div className={styles.dropdown}>
-                  <ul>
-                    <li onClick={() => handleRoleSelectSignIn("employee")}>
-                      Employee
-                    </li>
-                    <li onClick={() => handleRoleSelectSignIn("doctor")}>
-                      Doctor
-                    </li>
-                    <li onClick={() => handleRoleSelectSignIn("admin")}>
-                      Admin
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </li>
+                  </>
+                )}
+                {(userRole === "doctor" || userRole === "employee") && (
+                  <li>
+                    <NavLink
+                      to="/analytics"
+                      className={({ isActive }) =>
+                        isActive ? styles.activeLink : ""
+                      }
+                      onClick={handleNavLinkClick}
+                    >
+                      Analytics
+                    </NavLink>
+                  </li>
+                )}
+                <li onClick={logout} style={{ cursor: "pointer" }}>
+                  Logout
+                </li>
+              </>
+            ) : (
+              <>
+                <li
+                  onMouseEnter={handleMouseEnterSignUp}
+                  onMouseLeave={handleMouseLeaveSignUp}
+                  style={{ position: "relative", cursor: "pointer" }}
+                >
+                  <span className={styles.signupLink}>SignUp</span>
+                  {showDropdownSignUp && (
+                    <div className={styles.dropdown}>
+                      <ul>
+                        <li onClick={() => handleRoleSelectSignUp("employee")}>
+                          Employee
+                        </li>
+                        <li onClick={() => handleRoleSelectSignUp("doctor")}>
+                          Doctor
+                        </li>
+                        <li onClick={() => handleRoleSelectSignUp("admin")}>
+                          Admin
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </li>
+                <li
+                  onMouseEnter={handleMouseEnterSignIn}
+                  onMouseLeave={handleMouseLeaveSignIn}
+                  style={{ position: "relative", cursor: "pointer" }}
+                >
+                  <span className={styles.signupLink}>SignIn</span>
+                  {showDropdownSignIn && (
+                    <div className={styles.dropdown}>
+                      <ul>
+                        <li onClick={() => handleRoleSelectSignIn("employee")}>
+                          Employee
+                        </li>
+                        <li onClick={() => handleRoleSelectSignIn("doctor")}>
+                          Doctor
+                        </li>
+                        <li onClick={() => handleRoleSelectSignIn("admin")}>
+                          Admin
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

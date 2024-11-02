@@ -49,9 +49,14 @@
     background: #007bff;
     color: #fff;
     border: none;
-    padding: 10px 15px;
+    /* padding: 10px 15px; */
     border-radius: 5px;
     cursor: pointer;
+    width:5rem;
+    height:2rem;
+    display:flex;
+    justify-content:center;
+    align-items: center;
   }
   
   .button:hover {

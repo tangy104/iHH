@@ -1,11 +1,8 @@
-import { useParams } from "react-router-dom";
-import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../../states/AuthContext";
 import styles from "./SignUp.module.css";
 import axios from "axios";
-
-// import EmployeeSignUp from "./EmployeeSignUp";
-// import DoctorSignUp from "./DoctorSignUp";
-// import AdminSignUp from "./AdminSignUp";
 
 const SignUp = () => {
   const { role } = useParams();
@@ -22,22 +19,27 @@ const SignUp = () => {
 };
 
 const EmployeeSignUp = () => {
+  const navigate = useNavigate();
+  const { role } = useParams();
+  const { isAuthenticated, userRole, login, logout } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     userid: "",
     name: "",
     password: "",
     phone: "",
     email: "",
-    role: "employee",
+    role: role,
   });
 
   const [responseMessage, setResponseMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     if (!formData.userid) {
       setResponseMessage("Please fill id no.");
@@ -47,7 +49,7 @@ const EmployeeSignUp = () => {
     console.log("Employee Data:", formData);
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/HR/`,
+        `${import.meta.env.VITE_API_BASE_URL}/signup/`,
         formData
       );
       console.log("Server Response:", response.data);
@@ -58,11 +60,15 @@ const EmployeeSignUp = () => {
         password: "",
         phone: "",
         email: "",
-        role: role,
+        role: "employee",
       });
+      setIsLoading(false);
+      login(role);
+      navigate("/analytics");
     } catch (error) {
       console.error("Error submitting data:", error);
       setResponseMessage("Failed to submit data. Please try again.");
+      setIsLoading(false);
     }
   };
 
@@ -120,9 +126,9 @@ const EmployeeSignUp = () => {
             onChange={handleChange}
           />
         </div>
-
+        {/* <div className={styles.spinner}></div> */}
         <button className={styles.button} type="submit">
-          Submit
+          {isLoading ? <div className={styles.spinner}></div> : "Submit"}
         </button>
         {responseMessage && <p>{responseMessage}</p>}
       </form>

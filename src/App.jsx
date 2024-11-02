@@ -13,7 +13,7 @@ const App = () => {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<MainForm />} />
+          <Route path="/" element={<VisualFetch />} />
           <Route path="/form" element={<MainForm />} />
           <Route path="/analytics" element={<VisualFetch />} />
           <Route path="/signUp/:role" element={<SignUp />} />
