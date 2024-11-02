@@ -15,6 +15,7 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(false);
   const [showDropdownSignUp, setShowDropdownSignUp] = useState(false);
   const [showDropdownSignIn, setShowDropdownSignIn] = useState(false);
+  const [showDropdownHospitalData, setShowDropdownHospitalData] = useState(false);
 
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
@@ -39,6 +40,14 @@ const Navbar = () => {
     setShowDropdownSignIn(false);
   };
 
+  const handleMouseEnterHospitalData = () => {
+    setShowDropdownHospitalData(true);
+  };
+
+  const handleMouseLeaveHospitalData = () => {
+    setShowDropdownHospitalData(false);
+  };
+
   const handleRoleSelectSignUp = (role) => {
     setShowDropdownSignUp(false);
     navigate(`/signUp/${role}`);
@@ -46,6 +55,10 @@ const Navbar = () => {
   const handleRoleSelectSignIn = (role) => {
     setShowDropdownSignIn(false);
     navigate(`/signIn/${role}`);
+  };
+  const handleRoleSelectHospitalData = (type) => {
+    setShowDropdownHospitalData(false);
+    navigate(`/hospitaldata/${type}`);
   };
 
   return (
@@ -83,7 +96,7 @@ const Navbar = () => {
               <>
                 {userRole === "admin" && (
                   <>
-                    <li>
+                    {/* <li>
                       <NavLink
                         to="/form"
                         className={({ isActive }) =>
@@ -95,7 +108,40 @@ const Navbar = () => {
                       >
                         Form
                       </NavLink>
+                    </li> */}
+                    <li
+                      onMouseEnter={handleMouseEnterHospitalData}
+                      onMouseLeave={handleMouseLeaveHospitalData}
+                      style={{ position: "relative", cursor: "pointer" }}
+                    >
+                      <span className={styles.signupLink}>Hospital Data</span>
+                      {showDropdownHospitalData && (
+                        <div className={styles.dropdown}>
+                          <ul>
+                            <li
+                              onClick={() => handleRoleSelectHospitalData("OHC")}
+                            >
+                              OHC
+                            </li>
+                            <li
+                              onClick={() => handleRoleSelectHospitalData("OPD")}
+                            >
+                              OPD
+                            </li>
+                            <li onClick={() => handleRoleSelectHospitalData("IPD")}>
+                              IPD
+                            </li>
+                            <li onClick={() => handleRoleSelectHospitalData("Medicine")}>
+                              Medicine
+                            </li>
+                            <li onClick={() => handleRoleSelectHospitalData("Pathology")}>
+                              Pathology
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </li>
+
                     <li>
                       <NavLink
                         to="/analytics"

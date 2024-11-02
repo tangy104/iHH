@@ -4,6 +4,7 @@ import { AuthProvider } from "./states/AuthContext";
 import Navbar from "./components/nav/Navbar";
 import MainForm from "./pages/main/MainForm";
 import VisualFetch from "./pages/visualFetch/VisualFetch";
+import HospitalData from "./pages/hospital/hospitalData/HospitalData"
 import SignUp from "./pages/auth/signUp/SignUp";
 import SignIn from "./pages/auth/signIn/SignIn";
 
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/analytics" element={<VisualFetch />} />
           <Route path="/signUp/:role" element={<SignUp />} />
           <Route path="/signIn/:role" element={<SignIn />} />
+          <Route path="/hospitaldata/:type" element={<HospitalData />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

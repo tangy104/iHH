@@ -1,5 +1,6 @@
-import { useParams } from "react-router-dom";
-import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../../states/AuthContext";
 import styles from "./SignIn.module.css";
 import axios from "axios";
 
@@ -18,18 +19,23 @@ const SignIn = () => {
 };
 
 const EmployeeSignIn = () => {
+  const navigate = useNavigate();
+  const { role } = useParams();
+  const { isAuthenticated, userRole, login, logout } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     userid: "",
     password: "",
   });
 
   const [responseMessage, setResponseMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     if (!formData.userid) {
       setResponseMessage("Please fill id no.");
@@ -39,7 +45,7 @@ const EmployeeSignIn = () => {
     console.log("Employee Data:", formData);
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/HR/`,
+        `${import.meta.env.VITE_API_BASE_URL}/signin/`,
         formData
       );
       console.log("Server Response:", response.data);
@@ -48,9 +54,13 @@ const EmployeeSignIn = () => {
         userid: "",
         password: "",
       });
+      setIsLoading(false);
+      login(response.data.role);  //to be assgined yet in backend
+      navigate("/analytics");
     } catch (error) {
       console.error("Error submitting data:", error);
       setResponseMessage("Failed to submit data. Please try again.");
+      setIsLoading(false);
     }
   };
 
@@ -80,7 +90,7 @@ const EmployeeSignIn = () => {
         </div>
 
         <button className={styles.button} type="submit">
-          Submit
+          {isLoading ? <div className={styles.spinner}></div> : "Submit"}
         </button>
         {responseMessage && <p>{responseMessage}</p>}
       </form>
