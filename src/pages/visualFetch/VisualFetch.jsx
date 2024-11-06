@@ -229,6 +229,7 @@ const VisualFetch = () => {
   const [userId, setUserId] = useState("");
   const [timeRange, setTimeRange] = useState("");
   const [data, setData] = useState(null);
+  const [isLoading, setisLoading] = useState(false);
 
   const formatDate = (date) => {
     return dayjs(date).format("DD-MM-YYYY");
@@ -267,8 +268,9 @@ const VisualFetch = () => {
     }
 
     try {
+      setisLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/Analytics/`,
+        `${import.meta.env.VITE_API_BASE_URL}/analytics/`,
         {
           params: {
             userid: userId,
@@ -277,15 +279,15 @@ const VisualFetch = () => {
           },
         }
       );
-      console.log("Data fetched successfully:", response.data);
+      console.log("Data fetched successfully:", response.data.data);
       // setData(response.data);
-      const fetchedData = response.data;
+      const fetchedData = response.data.data;
 
       // Calculate visit counts and days since the last visit
       const visitCounts = {
         ipd: fetchedData.userMedical?.ipd.length || 0,
         opd: fetchedData.userMedical?.opd.length || 0,
-        medicine: fetchedData.userMedical?.medicine.length || 0,
+        medicine: fetchedData.userMedical?.medicines.length || 0,
         ohc: fetchedData.userMedical?.ohc.length || 0,
         pathology: fetchedData.userMedical?.pathology.length || 0,
       };
@@ -297,7 +299,7 @@ const VisualFetch = () => {
         ...(fetchedData.userMedical?.opd.map((item) =>
           dayjs(item.date).valueOf()
         ) || []),
-        ...(fetchedData.userMedical?.medicine.map((item) =>
+        ...(fetchedData.userMedical?.medicines.map((item) =>
           dayjs(item.date).valueOf()
         ) || []),
         ...(fetchedData.userMedical?.ohc.map((item) =>
@@ -317,6 +319,7 @@ const VisualFetch = () => {
         visitCounts,
         daysSinceLastVisit,
       });
+      setisLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -447,14 +450,14 @@ const VisualFetch = () => {
         </select>
 
         <button className={styles.button} onClick={fetchData}>
-          Fetch Data
+          {isLoading ? <div className={styles.spinner}></div> : "Fetch Data"}
         </button>
       </div>
 
       {data &&
-        (data.userDetails.id ? (
+        (data.user.userid ? (
           <div className={styles.dataContainer}>
-            {renderTableSection("User Details", data.userDetails, [
+            {renderTableSection("User Details", data.user, [
               "userid",
               "name",
               "email",
@@ -463,11 +466,11 @@ const VisualFetch = () => {
               "dob",
             ])}
             {renderCountsAndLastVisit()}
-            {renderTableSection("Current Shop", data.currentShop, [
+            {renderTableSection("Current Shop", data.shop, [
               "shopid",
               "location",
             ])}
-            {renderTableSection("User Work Details", data.userWork, [
+            {renderTableSection("User Work Details", data.work, [
               "shopid",
               "joining_date",
               "shift",
@@ -497,7 +500,7 @@ const VisualFetch = () => {
               "result",
               "date",
             ])}
-            {renderTableSection("Medicine", data.userMedical?.medicine, [
+            {renderTableSection("Medicine", data.userMedical?.medicines, [
               "medicine",
               "doctor",
               "date",
@@ -516,7 +519,7 @@ const VisualFetch = () => {
             Employee code does not exists.
           </div>
         ))}
-      <ShopEnvironmentGraph data={data && data.shopEnvironment} />
+      <ShopEnvironmentGraph data={data && data.env} />
     </div>
   );
 };

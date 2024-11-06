@@ -3,6 +3,8 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../../../states/AuthContext";
 import styles from "./SignIn.module.css";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignIn = () => {
   const { role } = useParams();
@@ -12,8 +14,7 @@ const SignIn = () => {
       {role === "employee" && <EmployeeSignIn />}
       {role === "doctor" && <EmployeeSignIn />}
       {role === "admin" && <EmployeeSignIn />}
-      {/* {role === "doctor" && <DoctorSignIn />}
-      {role === "admin" && <AdminSignIn />} */}
+      {/* <ToastContainer position="top-center" autoClose={3000} /> */}
     </div>
   );
 };
@@ -27,7 +28,6 @@ const EmployeeSignIn = () => {
     password: "",
   });
 
-  const [responseMessage, setResponseMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -38,28 +38,27 @@ const EmployeeSignIn = () => {
     setIsLoading(true);
     e.preventDefault();
     if (!formData.userid) {
-      setResponseMessage("Please fill id no.");
+      toast.error("Please fill in your Employee ID.");
+      setIsLoading(false);
       return;
     }
 
-    console.log("Employee Data:", formData);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/signin/`,
         formData
       );
-      console.log("Server Response:", response.data);
-      setResponseMessage("Data submitted successfully!");
+      toast.success("Signed in successfully!");
       setFormData({
         userid: "",
         password: "",
       });
       setIsLoading(false);
-      login(response.data.role);  //to be assgined yet in backend
+      login(response.data.role); // Ensure this is set up in your backend
       navigate("/analytics");
     } catch (error) {
       console.error("Error submitting data:", error);
-      setResponseMessage("Failed to submit data. Please try again.");
+      toast.error("Failed to sign in. Please try again.");
       setIsLoading(false);
     }
   };
@@ -82,7 +81,7 @@ const EmployeeSignIn = () => {
           <label className={styles.label}>Password:</label>
           <input
             className={styles.input}
-            type="text"
+            type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
@@ -92,7 +91,6 @@ const EmployeeSignIn = () => {
         <button className={styles.button} type="submit">
           {isLoading ? <div className={styles.spinner}></div> : "Submit"}
         </button>
-        {responseMessage && <p>{responseMessage}</p>}
       </form>
     </div>
   );

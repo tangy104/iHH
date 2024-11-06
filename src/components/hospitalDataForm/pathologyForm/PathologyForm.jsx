@@ -72,10 +72,10 @@ const PathologyForm = () => {
     setError("");
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/HR/${userid}`
+        `${import.meta.env.VITE_API_BASE_URL}/HR/${userid}`
       );
-      if (response.data.information) {
-        setEmployeeDetails(response.data);
+      if (response.data) {
+        setEmployeeDetails(response.data.information);
       } else {
         setEmployeeDetails(null);
         setError("Employee not found.");
@@ -134,6 +134,7 @@ const PathologyForm = () => {
 
   const handleImageChange = (event) => {
     setFile(event.target.files[0]);
+    console.log("File:", event.target.files[0]);
   };
 
   const handleSubmit = async (event) => {
@@ -146,20 +147,28 @@ const PathologyForm = () => {
       return;
     }
     console.log("Pathology Form Data:", formData);
-    const data = new FormData();
-    data.append("userid", formData.userid);
-    data.append("date", formData.date);
-    data.append("test", formData.test);
-    data.append("result", formData.result);
-    data.append("file", file);
+    const data={
+      userid:formData.userid,
+      date:formData.date,
+      test:formData.test,
+      result:formData.result,
+      result_file:file?file.name:"",
+    }
+    // const data = new FormData();
+    // data.append("userid", formData.userid);
+    // data.append("date", formData.date);
+    // data.append("test", formData.test);
+    // data.append("result", formData.result);
+    // data.append("result_file", file?file.name:"");
+    console.log("Data:", data);
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/pathology/${formData.userid}`,
+        `${import.meta.env.VITE_API_BASE_URL}/pathology`,
         data,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type":"Application/json",
           },
         }
       );
@@ -219,23 +228,23 @@ const PathologyForm = () => {
       {/* Display loading spinner, error, or employee details */}
       {loading && <p className={styles.loading}>Loading...</p>}
       {error && <p className={styles.error}>{error}</p>}
-      {employeeDetails && employeeDetails.information.name && (
+      {employeeDetails && employeeDetails.name && (
         <div className={styles.employeeDetails}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <p>
-              <strong>Name:</strong> {employeeDetails.information.name}
+              <strong>Name:</strong> {employeeDetails.name}
             </p>
             <p>
-              <strong>Shop:</strong> {employeeDetails.working.shopid}
+              <strong>Shop:</strong> {employeeDetails.shop}
             </p>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <p>
-              <strong>Email:</strong> {employeeDetails.information.email}
+              <strong>Email:</strong> {employeeDetails.email}
             </p>
             <p>
               <strong>Joining date:</strong>{" "}
-              {formatDate(employeeDetails.information.joining_date)}
+              {formatDate(employeeDetails.joining_date)}
             </p>
           </div>
         </div>

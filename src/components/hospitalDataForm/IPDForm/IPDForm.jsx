@@ -37,7 +37,7 @@ const IPDForm = () => {
     setError("");
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/HR/${userid}`
+        `${import.meta.env.VITE_API_BASE_URL}/HR/${userid}`
       );
       if (response.data.information) {
         setEmployeeDetails(response.data);
@@ -99,23 +99,33 @@ const IPDForm = () => {
       return;
     }
     // console.log("IPD Form Data:", formData);
-    const data = new FormData();
-    data.append("userid", formData.userid);
-    data.append("admit_no", formData.admit_no);
-    data.append("admission_date", formData.admission_date);
-    data.append("discharge_date", formData.discharge_date);
-    data.append("doctor", formData.doctor);
-    data.append("prescription", formData.prescription);
-    data.append("status", formData.status);
-    data.append("file", file);
+    const data={
+      userid: formData.userid,
+      admit_no: formData.admit_no,
+      admission_date: formData.admission_date,
+      discharge_date: formData.discharge_date,
+      doctor: formData.doctor,
+      prescription: formData.prescription,
+      status: formData.status,
+      prescription_file: file?file.name:"",
+    }
+    // const data = new FormData();
+    // data.append("userid", formData.userid);
+    // data.append("admit_no", formData.admit_no);
+    // data.append("admission_date", formData.admission_date);
+    // data.append("discharge_date", formData.discharge_date);
+    // data.append("doctor", formData.doctor);
+    // data.append("prescription", formData.prescription);
+    // data.append("status", formData.status);
+    // data.append("file", file);
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/IPD/${formData.userid}`,
+        `${import.meta.env.VITE_API_BASE_URL}/ipd`,
         data,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
@@ -161,7 +171,7 @@ const IPDForm = () => {
               <strong>Name:</strong> {employeeDetails.information.name}
             </p>
             <p>
-              <strong>Shop:</strong> {employeeDetails.working.shopid}
+              <strong>Shop:</strong> {employeeDetails.information.shop}
             </p>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>

@@ -48,11 +48,10 @@ const OHCForm = () => {
     setError("");
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/HR/${userid}`
+        `${import.meta.env.VITE_API_BASE_URL}/HR/${userid}`
       );
-      console.log("OHC:", response.data);
-      if (response.data.information) {
-        setEmployeeDetails(response.data);
+      if (response.data) {
+        setEmployeeDetails(response.data.information);
       } else {
         setEmployeeDetails(null);
         setError("Employee not found.");
@@ -112,21 +111,28 @@ const OHCForm = () => {
       setResponseMessage("Please enter Employee code.");
       return;
     }
+    const data = {
+      userid: formData.userid,
+      date: formData.date,
+      doctor: formData.doctor,
+      prescription: formData.prescription,
+      prescription_file: file ? file.name : "",
+    };
 
-    const data = new FormData();
-    data.append("userid", formData.userid);
-    data.append("date", formData.date);
-    data.append("doctor", formData.doctor);
-    data.append("prescription", formData.prescription);
-    data.append("file", file);
+    // const data = new FormData();
+    // data.append("userid", formData.userid);
+    // data.append("date", formData.date);
+    // data.append("doctor", formData.doctor);
+    // data.append("prescription", formData.prescription);
+    // data.append("file", file);
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/OHC/${formData.userid}`,
+        `${import.meta.env.VITE_API_BASE_URL}/ohc`,
         data,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
@@ -160,32 +166,25 @@ const OHCForm = () => {
       {/* Display loading spinner, error, or employee details */}
       {loading && <p className={styles.loading}>Loading...</p>}
       {error && <p className={styles.error}>{error}</p>}
-      {employeeDetails && employeeDetails.information.name && (
+      {employeeDetails && employeeDetails.name && (
         <div className={styles.employeeDetails}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <p>
-              <strong>Name:</strong> {employeeDetails.information.name}
+              <strong>Name:</strong> {employeeDetails.name}
             </p>
             <p>
-              <strong>Shop:</strong> {employeeDetails.working.shopid}
+              <strong>Shop:</strong> {employeeDetails.shop}
             </p>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <p>
-              <strong>Email:</strong> {employeeDetails.information.email}
+              <strong>Email:</strong> {employeeDetails.email}
             </p>
             <p>
               <strong>Joining date:</strong>{" "}
-              {formatDate(employeeDetails.information.joining_date)}
+              {formatDate(employeeDetails.joining_date)}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={openModal}
-            className={styles.moreDetailsButton}
-          >
-            more details &#8599;
-          </button>
         </div>
       )}
 
@@ -196,43 +195,41 @@ const OHCForm = () => {
       )}
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        {employeeDetails && employeeDetails.information.name && (
+        {employeeDetails && employeeDetails.name && (
           <>
             <h2>Employee Details</h2>
             <p>
-              <strong>Name:</strong> {employeeDetails.information.name}
+              <strong>Name:</strong> {employeeDetails.name}
             </p>
             <p>
-              <strong>Email:</strong> {employeeDetails.information.email}
+              <strong>Email:</strong> {employeeDetails.email}
             </p>
             <p>
-              <strong>Phone:</strong> {employeeDetails.information.phone}
+              <strong>Phone:</strong> {employeeDetails.phone}
             </p>
             <p>
-              <strong>Gender:</strong> {employeeDetails.information.gender}
+              <strong>Gender:</strong> {employeeDetails.gender}
             </p>
             <p>
-              <strong>Date of Birth:</strong>{" "}
-              {formatDate(employeeDetails.information.dob)}
+              <strong>Date of Birth:</strong> {formatDate(employeeDetails.dob)}
             </p>
             <p>
-              <strong>Grade:</strong> {employeeDetails.working.grade}
+              <strong>Grade:</strong> {employeeDetails.grade}
             </p>
             <p>
-              <strong>Shift:</strong> {employeeDetails.working.shift}
+              <strong>Shift:</strong> {employeeDetails.shift}
             </p>
             <p>
-              <strong>Distance to Work:</strong>{" "}
-              {employeeDetails.working.distance}
+              <strong>Distance to Work:</strong> {employeeDetails.distance}
             </p>
             <p>
               <strong>Joining Date:</strong>{" "}
-              {formatDate(employeeDetails.information.joining_date)}
+              {formatDate(employeeDetails.joining_date)}
             </p>
             <p>
               <strong>Leaving Date:</strong>
-              {employeeDetails.information.leaving_date
-                ? formatDate(employeeDetails.information.leaving_date)
+              {employeeDetails.leaving_date
+                ? formatDate(employeeDetails.leaving_date)
                 : "Still working"}
             </p>
           </>

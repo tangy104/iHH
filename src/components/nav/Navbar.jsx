@@ -15,8 +15,14 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(false);
   const [showDropdownSignUp, setShowDropdownSignUp] = useState(false);
   const [showDropdownSignIn, setShowDropdownSignIn] = useState(false);
-  const [showDropdownHospitalData, setShowDropdownHospitalData] = useState(false);
+  const [showDropdownHospitalData, setShowDropdownHospitalData] =
+    useState(false);
+  const [showDropdownShopData, setShowDropdownShopData] = useState(false);
 
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
   };
@@ -48,6 +54,14 @@ const Navbar = () => {
     setShowDropdownHospitalData(false);
   };
 
+  const handleMouseEnterShopData = () => {
+    setShowDropdownShopData(true);
+  };
+
+  const handleMouseLeaveShopData = () => {
+    setShowDropdownShopData(false);
+  };
+
   const handleRoleSelectSignUp = (role) => {
     setShowDropdownSignUp(false);
     navigate(`/signUp/${role}`);
@@ -59,6 +73,10 @@ const Navbar = () => {
   const handleRoleSelectHospitalData = (type) => {
     setShowDropdownHospitalData(false);
     navigate(`/hospitaldata/${type}`);
+  };
+  const handleRoleSelectShopData = (type) => {
+    setShowDropdownShopData(false);
+    navigate(`/shopdata/${type}`);
   };
 
   return (
@@ -114,28 +132,64 @@ const Navbar = () => {
                       onMouseLeave={handleMouseLeaveHospitalData}
                       style={{ position: "relative", cursor: "pointer" }}
                     >
-                      <span className={styles.signupLink}>Hospital Data</span>
+                      <span className={styles.signupLink}>Hospital</span>
                       {showDropdownHospitalData && (
                         <div className={styles.dropdown}>
                           <ul>
                             <li
-                              onClick={() => handleRoleSelectHospitalData("OHC")}
+                              onClick={() =>
+                                handleRoleSelectHospitalData("OHC")
+                              }
                             >
                               OHC
                             </li>
                             <li
-                              onClick={() => handleRoleSelectHospitalData("OPD")}
+                              onClick={() =>
+                                handleRoleSelectHospitalData("OPD")
+                              }
                             >
                               OPD
                             </li>
-                            <li onClick={() => handleRoleSelectHospitalData("IPD")}>
+                            <li
+                              onClick={() =>
+                                handleRoleSelectHospitalData("IPD")
+                              }
+                            >
                               IPD
                             </li>
-                            <li onClick={() => handleRoleSelectHospitalData("Medicine")}>
+                            <li
+                              onClick={() =>
+                                handleRoleSelectHospitalData("Medicine")
+                              }
+                            >
                               Medicine
                             </li>
-                            <li onClick={() => handleRoleSelectHospitalData("Pathology")}>
+                            <li
+                              onClick={() =>
+                                handleRoleSelectHospitalData("Pathology")
+                              }
+                            >
                               Pathology
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </li>
+                    <li
+                      onMouseEnter={handleMouseEnterShopData}
+                      onMouseLeave={handleMouseLeaveShopData}
+                      style={{ position: "relative", cursor: "pointer" }}
+                    >
+                      <span className={styles.signupLink}>Shop</span>
+                      {showDropdownShopData && (
+                        <div className={styles.dropdown}>
+                          <ul>
+                            <li
+                              onClick={() =>
+                                handleRoleSelectShopData("Environment")
+                              }
+                            >
+                              Environment
                             </li>
                           </ul>
                         </div>
@@ -155,7 +209,7 @@ const Navbar = () => {
                     </li>
                   </>
                 )}
-                {(userRole === "doctor" || userRole === "employee") && (
+                {userRole === "doctor" && (
                   <li>
                     <NavLink
                       to="/analytics"
@@ -168,7 +222,81 @@ const Navbar = () => {
                     </NavLink>
                   </li>
                 )}
-                <li onClick={logout} style={{ cursor: "pointer" }}>
+                {userRole === "employee" && (
+                  <>
+                    <li
+                      onMouseEnter={handleMouseEnterHospitalData}
+                      onMouseLeave={handleMouseLeaveHospitalData}
+                      style={{ position: "relative", cursor: "pointer" }}
+                    >
+                      <span className={styles.signupLink}>Hospital</span>
+                      {showDropdownHospitalData && (
+                        <div className={styles.dropdown}>
+                          <ul>
+                            <li
+                              onClick={() =>
+                                handleRoleSelectHospitalData("OHC")
+                              }
+                            >
+                              OHC
+                            </li>
+                            <li
+                              onClick={() =>
+                                handleRoleSelectHospitalData("OPD")
+                              }
+                            >
+                              OPD
+                            </li>
+                            <li
+                              onClick={() =>
+                                handleRoleSelectHospitalData("IPD")
+                              }
+                            >
+                              IPD
+                            </li>
+                            <li
+                              onClick={() =>
+                                handleRoleSelectHospitalData("Medicine")
+                              }
+                            >
+                              Medicine
+                            </li>
+                            <li
+                              onClick={() =>
+                                handleRoleSelectHospitalData("Pathology")
+                              }
+                            >
+                              Pathology
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/work"
+                        className={({ isActive }) =>
+                          isActive ? styles.activeLink : ""
+                        }
+                        onClick={handleNavLinkClick}
+                      >
+                        Work
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/analytics"
+                        className={({ isActive }) =>
+                          isActive ? styles.activeLink : ""
+                        }
+                        onClick={handleNavLinkClick}
+                      >
+                        Analytics
+                      </NavLink>
+                    </li>
+                  </>
+                )}
+                <li onClick={handleLogout} style={{ cursor: "pointer" }}>
                   Logout
                 </li>
               </>

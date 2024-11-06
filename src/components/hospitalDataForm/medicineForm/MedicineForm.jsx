@@ -42,7 +42,7 @@ const MedicineForm = () => {
     setError("");
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/HR/${userid}`
+        `${import.meta.env.VITE_API_BASE_URL}/HR/${userid}`
       );
       if (response.data.information) {
         setEmployeeDetails(response.data);
@@ -105,20 +105,27 @@ const MedicineForm = () => {
       return;
     }
     // console.log("Medicine Form Data:", formData);
-    const data = new FormData();
-    data.append("userid", formData.userid);
-    data.append("date", formData.date);
-    data.append("doctor", formData.doctor);
-    data.append("medicine", formData.medicine);
-    data.append("file", file);
+    const data={
+      userid: formData.userid,
+      date: formData.date,
+      doctor: formData.doctor,
+      medicine: formData.medicine,
+      prescription_file: file ? file.name : "", 
+    }
+    // const data = new FormData();
+    // data.append("userid", formData.userid);
+    // data.append("date", formData.date);
+    // data.append("doctor", formData.doctor);
+    // data.append("medicine", formData.medicine);
+    // data.append("file", file);
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/medicine/${formData.userid}`,
+        `${import.meta.env.VITE_API_BASE_URL}/medicine`,
         data,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
@@ -161,7 +168,7 @@ const MedicineForm = () => {
               <strong>Name:</strong> {employeeDetails.information.name}
             </p>
             <p>
-              <strong>Shop:</strong> {employeeDetails.working.shopid}
+              <strong>Shop:</strong> {employeeDetails.information.shop}
             </p>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>

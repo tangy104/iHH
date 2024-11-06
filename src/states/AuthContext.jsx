@@ -1,21 +1,30 @@
-import React, { createContext, useState } from "react";
+// Remove `useNavigate` from AuthContext
+import { toast } from "react-toastify";
+import { createContext, useState, useEffect } from "react";
 
-// Create the context
 export const AuthContext = createContext();
 
-// Create a provider component
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    JSON.parse(localStorage.getItem("isAuthenticated")) || false
+  );
+  const [userRole, setUserRole] = useState(
+    localStorage.getItem("userRole") || null
+  );
 
   const login = (role) => {
     setIsAuthenticated(true);
     setUserRole(role);
+    localStorage.setItem("isAuthenticated", true);
+    localStorage.setItem("userRole", role);
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setUserRole(null);
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userRole");
+    toast.info("Logged out successfully");
   };
 
   return (

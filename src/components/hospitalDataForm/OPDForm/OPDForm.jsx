@@ -44,9 +44,9 @@ const OPDForm = () => {
     setError("");
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/HR/${userid}`
+        `${import.meta.env.VITE_API_BASE_URL}/HR/${userid}`
       );
-      if (response.data.information) {
+      if (response.data) {
         setEmployeeDetails(response.data);
       } else {
         setEmployeeDetails(null);
@@ -107,22 +107,31 @@ const OPDForm = () => {
       return;
     }
 
-    const data = new FormData();
-    data.append("userid", formData.userid);
-    data.append("date", formData.date);
-    data.append("doctor", formData.doctor);
-    data.append("prescription", formData.prescription);
-    data.append("status", formData.status);
-    data.append("file", file);
+    const data={
+      userid: formData.userid,
+      date: formData.date,
+      doctor: formData.doctor,
+      prescription: formData.prescription,
+      status: formData.status,
+      prescription_file: file?file.name:"",
+    }
+
+    // const data = new FormData();
+    // data.append("userid", formData.userid);
+    // data.append("date", formData.date);
+    // data.append("doctor", formData.doctor);
+    // data.append("prescription", formData.prescription);
+    // data.append("status", formData.status);
+    // data.append("file", file);
 
     // console.log("OPD Form Data:", formData);
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/OPD/${formData.userid}`,
+        `${import.meta.env.VITE_API_BASE_URL}/opd`,
         data,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
@@ -166,7 +175,7 @@ const OPDForm = () => {
               <strong>Name:</strong> {employeeDetails.information.name}
             </p>
             <p>
-              <strong>Shop:</strong> {employeeDetails.working.shopid}
+              <strong>Shop:</strong> {employeeDetails.information.shop}
             </p>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
